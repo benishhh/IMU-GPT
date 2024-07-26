@@ -1,7 +1,8 @@
-// app/(main)/chat/[id]/page.tsx
-
-import { useRouter } from 'next/router';
 import React from 'react';
+import Navbar from '@/components/Navbar';
+import Sidebar from '@/components/Sidebar';
+import Chat from '@/components/chat/Chat';
+
 
 const chatHistory = [
   { id: 1, title: 'Rozmowa 1', summary: 'Dyskusja o projektach AI', date: '2024-07-01' },
@@ -24,10 +25,14 @@ const ChatDetail = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl">{chat.title}</h1>
-      <p>{chat.summary}</p>
-    </div>
+    <>
+      
+      <div className="flex h-full">
+        <div className="flex-1 h-full overflow-hidden">
+          <Chat chatId={params.id} />
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -32,15 +32,15 @@ const Sidebar: React.FC<{ isOpen: boolean, toggleSidebar: () => void }> = ({ isO
       <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
         <h2 className="text-lg font-bold">Chats</h2>
         <div className="flex space-x-2">
-          <Button onClick={toggleSidebar} className="md:hidden text-sm py-1 px-2">Close</Button>
-          <Button className="text-sm py-1 px-2 md:text-base md:py-2 md:px-4">New Chat</Button>
+          <Button onClick={toggleSidebar} className="md:hidden text-sm py-1 px-2 rounded-2xl">Close</Button>
+          <Button className="text-sm py-1 px-2 md:text-base md:py-2 md:px-4 rounded-2xl">New Chat</Button>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
         <ScrollArea className="h-full">
           <ul>
             {chatHistory.map((chat) => (
-              <li key={chat.id} className="p-0 border-b dark:border-gray-700">
+              <li key={chat.id} className="p-0 border-c dark:border-gray-700">
                 <Link href={`/chat/${chat.id}`} passHref>
                 <Card className="cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
                   <CardHeader>
