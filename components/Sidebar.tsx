@@ -1,10 +1,12 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 
 interface Chat {
   id: number;
@@ -13,7 +15,7 @@ interface Chat {
   date: string;
 }
 
-const chatHistory: Chat[] = [
+const initialChatHistory: Chat[] = [
   { id: 1, title: 'Rozmowa 1', summary: 'Dyskusja o projektach AI', date: '2024-07-01' },
   { id: 2, title: 'Rozmowa 2', summary: 'Pytania o Next.js', date: '2024-07-05' },
   { id: 3, title: 'Rozmowa 3', summary: 'Porada dotycząca TypeScript', date: '2024-07-10' },
@@ -27,26 +29,43 @@ const chatHistory: Chat[] = [
 ];
 
 const Sidebar: React.FC<{ isOpen: boolean, toggleSidebar: () => void }> = ({ isOpen, toggleSidebar }) => {
+  
+  const [chatHistory, setChatHistory] = useState<Chat[]>(initialChatHistory);
+  const router = useRouter();
+
+  const handleNewChat = () => {
+    const newChatId = chatHistory.length + 1;
+    const newChat: Chat = {
+      id: newChatId,
+      title: `Rozmowa ${newChatId}`,
+      summary: 'Nowa rozmowa',
+      date: new Date().toISOString().split('T')[0],
+    };
+    setChatHistory([...chatHistory, newChat]);
+    router.push(`/chat/${newChatId}`);
+  };
+
+  const sortedChatHistory = [...chatHistory].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  
   return (
     <div className={`fixed md:relative inset-y-0 left-0 top-0 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col h-screen md:h-full w-64 bg-gray-100 dark:bg-gray-800 z-50 md:z-40`}>
       <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
-        <h2 className="text-lg font-bold">Chats</h2>
+        <h2 className="text-lg font-semibold">Chats</h2>
         <div className="flex space-x-2">
           <Button onClick={toggleSidebar} className="md:hidden text-sm py-1 px-2 rounded-2xl">Close</Button>
-          <Button className="text-sm py-1 px-2 md:text-base md:py-2 md:px-4 rounded-2xl">New Chat</Button>
+          <Button onClick={handleNewChat} className="text-sm py-1 px-2 md:text-base md:py-2 md:px-4 rounded-2xl">New Chat</Button>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
         <ScrollArea className="h-full">
           <ul>
-            {chatHistory.map((chat) => (
+            {sortedChatHistory.map((chat) => (
               <li key={chat.id} className="p-0 border-c dark:border-gray-700">
                 <Link href={`/chat/${chat.id}`} passHref>
                 <Card className="cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
                   <CardHeader>
                     <CardTitle className="text-sm font-medium">{chat.title}</CardTitle>
                     <CardDescription className="text-xs text-gray-500">{chat.summary}</CardDescription>
-                    {/* <CardDescription className="text-xs text-gray-400">{chat.date}</CardDescription> */}
                   </CardHeader>
                 </Card>
                 </Link>
